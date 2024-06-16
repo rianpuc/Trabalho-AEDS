@@ -91,7 +91,7 @@ class Consulta{
 };
 
 std::vector<Paciente> lerPacientes(const std::string&);
-void cadastrar_paciente();
+void cadastrar_paciente(const std::string&);
 void cadastrar_medico();
 void cadastrar_consulta();
 void cancelar_consulta();
@@ -107,13 +107,9 @@ int main(void){
     std::cout << "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n[1] - Cadastrar um paciente\n[2] - Cadastrar um medico\n[3] - Cadastrar uma consulta\n";
     std::cout << "[4] - Cancelar uma consulta\n[5] - Relatorios\n[0] - Sair\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\nSelecione uma opcao: ";
     std::cin >> a;
-    for (const auto& paciente : pacientes) {
-        paciente.exibir();
-        std::cout << "-------------------------\n";
-    }
     switch (a){
         case 1:
-            cadastrar_paciente();
+            cadastrar_paciente(arqPacientes);
             break;
         case 2:
             cadastrar_medico();
@@ -157,10 +153,11 @@ std::vector<Paciente> lerPacientes(const std::string& nomeArquivo){
     return pacientes;
 }
 
-void cadastrar_paciente(){
+void cadastrar_paciente(const std::string& nomeArquivo){
+    std::cin.ignore();
+    std::ofstream arquivo(nomeArquivo, std::ios::app);
     std::string codigo = gerarCodigo();
     std::string nome, endereco, telefone, data_nascimento;
-    std::cin.ignore();
     std::cout << "Nome: ";
     std::getline(std::cin, nome);
     std::cout << "Endereço: ";
@@ -170,7 +167,9 @@ void cadastrar_paciente(){
     std::cout << "Data de Nascimento (DD/MM/AAAA): ";
     std::getline(std::cin, data_nascimento);
     Paciente novoPaciente(codigo, nome, endereco, telefone, data_nascimento);
-    novoPaciente.exibir();
+    arquivo << codigo << "\n" << nome << "\n" << endereco << "\n" << telefone << "\n" << data_nascimento << "\n";
+    arquivo.close();
+    main();
 }
 
 void cadastrar_medico(){
