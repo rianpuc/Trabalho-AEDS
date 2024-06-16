@@ -87,7 +87,7 @@ bool verificarHoraValida(const std::string&, const std::string&);
 bool verificarCadastroMedico(const std::string&);
 bool verificarCadastroPaciente(const std::string&);
 bool verificarQuantidadeConsultasMedico(const std::string&, const Medico&);
-bool verificarHorarioDisponivelMedico(const std::string&, const Medico&);
+bool verificarHorarioDisponivelMedico(const std::string&, const std::string&, const Medico&);
 
 std::string obterDataAtual();
 std::string gerarCodigo();
