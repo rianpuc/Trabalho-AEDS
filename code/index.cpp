@@ -88,6 +88,8 @@ bool verificarCadastroMedico(const std::string&, const std::string&);
 bool verificarCadastroPaciente(const std::string&, const std::string&);
 std::string obterDataAtual();
 std::string gerarCodigo();
+Paciente* buscarPaciente(const std::string&, const std::vector<Paciente>&);
+Medico* buscarMedico(const std::string&, const std::vector<Medico>&);
 
 int main(void){
     std::string arqPacientes = "pacientes.txt";
@@ -262,21 +264,33 @@ bool verificarHoraValida(const std::string& hora1, const std::string& hora2){
 
 bool verificarCadastroMedico(const std::string& entrada, const std::string& nomeArquivo) {
     std::vector<Medico> medicosCadastrados = lerMedicos(nomeArquivo);
-    for (const Medico& medico : medicosCadastrados) {
-        if (medico.getNome() == entrada || medico.getCodigo() == entrada)
-            return true;
-    }
-    return false;
+    Medico* medico = buscarMedico(entrada, medicosCadastrados);
+    return medico != nullptr;
 }; 
 
 bool verificarCadastroPaciente(const std::string& entrada, const std::string& nomeArquivo) {
     std::vector<Paciente> pacientesCadastrados = lerPacientes(nomeArquivo);
-    for (const Paciente& paciente : pacientesCadastrados) {
-        if (paciente.getNome() == entrada || paciente.getCodigo() == entrada)
-            return true;
-    }
-    return false;
+    Paciente* paciente = buscarPaciente(entrada, pacientesCadastrados);
+    return paciente != nullptr;
 }; 
+
+Paciente* buscarPaciente(const std::string& entrada, std::vector<Paciente>& dados) {
+    for (Paciente& paciente : dados) {
+        if (paciente.getNome() == entrada || paciente.getCodigo() == entrada)
+            return &paciente;
+    }
+
+    return nullptr;
+};
+
+Medico* buscarMedico(const std::string& entrada, std::vector<Medico>& dados) {
+  for (Medico& medico : dados) {
+        if (medico.getNome() == entrada || medico.getCodigo() == entrada)
+            return &medico;
+    }
+
+    return nullptr;  
+};
 
 std::string obterDataAtual(){
     auto agora = std::chrono::system_clock::now();
