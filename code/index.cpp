@@ -9,18 +9,11 @@
 
 class Paciente{
     private:
-        std::string codigo;
-        std::string nome;
-        std::string endereco;
-        std::string telefone;
-        std::string data_nascimento;
-    
+        std::string codigo, nome, endereco, telefone, data_nascimento;
     public:
         Paciente(std::string& cod, const std::string& nom, const std::string& end, const std::string& tel, const std::string& data_nasc)
         : codigo(cod), nome(nom), endereco(end), telefone(tel), data_nascimento(data_nasc) {}
-        
         ~Paciente() = default;
-
         std::string getCodigo() const { 
             return codigo; }
         std::string getNome() const { 
@@ -36,49 +29,35 @@ class Paciente{
 };
 
 class Medico{
-private:
-    const std::string codigo, nome, especialidade;
-    std::string telefone;
-
-public:
-    Medico(const std::string &codigo, const std::string &nome, const std::string &especialidade, const std::string &telefone)
-        : codigo(codigo), nome(nome), especialidade(especialidade), telefone(telefone) {}
-    Medico(const std::string &codigo, const std::string &nome, const std::string &especialidade)
-        : codigo(codigo), nome(nome), especialidade(especialidade), telefone(""){};
-
-    void setTelefone(const std::string &telefone)
-    {
-        this->telefone = telefone;
-    };
-
-    std::string getCodigo() const { return this->codigo; }
-    std::string getNome() const { return this->nome; }
-    std::string getEspecialidade() const { return this->especialidade; }
-    std::string getTelefone() const { return this->telefone; }
-
-    void exibir() const
-    {
-        std::cout << "Codigo: " << codigo << std::endl
-                  << "Nome: " << nome << std::endl
-                  << "Especialidade: " << especialidade << std::endl
-                  << "Telefone: " << telefone << std::endl;
-    }
+    private:
+        std::string codigo, nome, especialidade, telefone;
+    public:
+        Medico(std::string &codigo, std::string &nome, std::string &especialidade, std::string &telefone)
+            : codigo(codigo), nome(nome), especialidade(especialidade), telefone(telefone) {}
+        ~Medico() = default;
+        std::string getCodigo() const { 
+            return this->codigo; }
+        std::string getNome() const { 
+            return this->nome; }
+        std::string getEspecialidade() const { 
+            return this->especialidade; }
+        std::string getTelefone() const { 
+            return this->telefone; }
+        void exibir() const{
+            std::cout << "Codigo: " << codigo << std::endl
+                    << "Nome: " << nome << std::endl
+                    << "Especialidade: " << especialidade << std::endl
+                    << "Telefone: " << telefone << std::endl;
+        }
 };
 
 class Consulta{
     private:
-        std::string codigo;
-        std::string data;
-        std::string hora;
-        std::string cod_medico;
-        std::string cod_paciente;
-    
+        std::string codigo, data, hora, cod_medico, cod_paciente;
     public:
         Consulta(std::string& cod, const std::string& data, const std::string& hora, const std::string& cod_med, const std::string& cod_pac)
         : codigo(cod), data(data), hora(hora), cod_medico(cod_med), cod_paciente(cod_pac) {}
-        
         ~Consulta() = default;
-
         std::string getCodigo() const { 
             return codigo; }
         std::string getData() const { 
@@ -145,26 +124,6 @@ int main(void){
             break;
     }
 }
-
-bool verificarCadastroMedico(const std::string& entrada, const std::string& nomeArquivo) {
-    std::vector<Medico> medicosCadastrados = lerMedicos(nomeArquivo);
-    for (const Medico& medico : medicosCadastrados) {
-        if (medico.getNome() == entrada || medico.getCodigo() == entrada)
-            return true;
-    }
-
-    return false;
-}; 
-
-bool verificarCadastroPaciente(const std::string& entrada, const std::string& nomeArquivo) {
-    std::vector<Paciente> pacientesCadastrados = lerPacientes(nomeArquivo);
-    for (const Paciente& paciente : pacientesCadastrados) {
-        if (paciente.getNome() == entrada || paciente.getCodigo() == entrada)
-            return true;
-    }
-
-    return false;
-}; 
 
 std::vector<Paciente> lerPacientes(const std::string& nomeArquivo){
     std::ifstream arquivo(nomeArquivo);
@@ -247,7 +206,7 @@ void cadastrar_paciente(const std::string& nomeArquivo){
 }
 
 void cadastrar_medico(){
-    const std::string codigo = gerarCodigo();
+    std::string codigo = gerarCodigo();
     std::string nome, especialidade, telefone;
     std::cin.ignore();
     std::cout << "Nome: ";
@@ -300,6 +259,24 @@ bool verificarHoraValida(const std::string& hora1, const std::string& hora2){
     int diferenca = std::abs(minutos1 - minutos2);
     return diferenca >= 30;
 }
+
+bool verificarCadastroMedico(const std::string& entrada, const std::string& nomeArquivo) {
+    std::vector<Medico> medicosCadastrados = lerMedicos(nomeArquivo);
+    for (const Medico& medico : medicosCadastrados) {
+        if (medico.getNome() == entrada || medico.getCodigo() == entrada)
+            return true;
+    }
+    return false;
+}; 
+
+bool verificarCadastroPaciente(const std::string& entrada, const std::string& nomeArquivo) {
+    std::vector<Paciente> pacientesCadastrados = lerPacientes(nomeArquivo);
+    for (const Paciente& paciente : pacientesCadastrados) {
+        if (paciente.getNome() == entrada || paciente.getCodigo() == entrada)
+            return true;
+    }
+    return false;
+}; 
 
 std::string obterDataAtual(){
     auto agora = std::chrono::system_clock::now();
