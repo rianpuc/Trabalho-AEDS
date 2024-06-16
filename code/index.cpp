@@ -72,7 +72,7 @@ public:
 
     void exibir() const
     {
-        std::cout << "Código: " << codigo << std::endl
+        std::cout << "Codigo: " << codigo << std::endl
                   << "Nome: " << nome << std::endl
                   << "Especialidade: " << especialidade << std::endl
                   << "Telefone: " << telefone << std::endl;
