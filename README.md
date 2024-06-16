@@ -1,6 +1,6 @@
 # Trabalho-AEDS
 
 Alunos:
-> Rian
-> Pedro
-> Mateus
+* Rian
+* Pedro
+* Mateus
