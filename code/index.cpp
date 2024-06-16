@@ -77,7 +77,7 @@ std::vector<Medico> lerMedicos(const std::string&);
 std::vector<Consulta> lerConsultas(const std::string&);
 void cadastrar_paciente(const std::string&);
 void cadastrar_medico(const std::string&);
-void cadastrar_consulta();
+void cadastrar_consulta(const std::string&);
 void cancelar_consulta();
 void relatorios();
 int converteHoraPraMinutos(const std::string&);
@@ -91,10 +91,11 @@ std::string gerarCodigo();
 Paciente* buscarPaciente(const std::string&, std::vector<Paciente>&);
 Medico* buscarMedico(const std::string&, std::vector<Medico>&);
 
+std::string arqPacientes = "pacientes.txt";
+std::string arqMedicos = "medicos.txt";
+std::string arqConsultas = "consultas.txt";
+
 int main(void){
-    std::string arqPacientes = "pacientes.txt";
-    std::string arqMedicos = "medicos.txt";
-    std::string arqConsultas = "consultas.txt";
     int a;
     std::vector<Paciente> pacientes = lerPacientes(arqPacientes);
     std::vector<Medico> medicos = lerMedicos(arqMedicos);
@@ -110,7 +111,7 @@ int main(void){
             cadastrar_medico(arqMedicos);
             break;
         case 3:
-            cadastrar_consulta();
+            cadastrar_consulta(arqConsultas);
             break;
         case 4:
             cancelar_consulta();
@@ -223,8 +224,38 @@ void cadastrar_medico(const std::string& nomeArquivo){
     main();
 }
 
-void cadastrar_consulta(){
-    std::cout << "\nCadastrar consulta\n";
+void cadastrar_consulta(const std::string& nomeArquivo){
+    std::cin.ignore();
+    std::string codigo = gerarCodigo();
+    std::string data, hora, nome_do_medico, nome_do_paciente, cod_medico, cod_paciente;
+    std::cout << "Data (DD/MM/YYYY): ";
+    std::getline(std::cin, data);
+    std::cout << "Hora (hh:mm): ";
+    std::getline(std::cin, hora);
+    std::cout << "Nome do Medico: ";
+    std::getline(std::cin, nome_do_medico);
+    std::cout << "Nome do Paciente: ";
+    std::getline(std::cin, nome_do_paciente);
+    if(verificarCadastroMedico(nome_do_medico, arqMedicos) == true){
+        std::vector<Medico> medicosCadastrados = lerMedicos(arqMedicos);
+        Medico* medico = buscarMedico(nome_do_medico, medicosCadastrados);
+        cod_medico = medico->getCodigo();
+    } else {
+        std::cout << "Esse medico nao esta cadastrado!\n";
+    }
+    if(verificarCadastroPaciente(nome_do_paciente, arqPacientes) == true){
+        std::vector<Paciente> pacientesCadastrados = lerPacientes(arqPacientes);
+        Paciente* paciente = buscarPaciente(nome_do_paciente, pacientesCadastrados);
+        cod_paciente = paciente->getCodigo();
+    } else {
+        std::cout << "Esse paciente nao esta cadastrado!\n";
+    }
+    if(verificarCadastroMedico(nome_do_medico, arqMedicos) == true && verificarCadastroPaciente(nome_do_paciente, arqPacientes) == true){
+        std::ofstream arquivo(nomeArquivo, std::ios::app);
+        arquivo << codigo << "\n" << data << "\n" << hora << "\n" << cod_medico << "\n" << cod_paciente << "\n";
+        arquivo.close();
+    }
+    main();
 }
 
 void cancelar_consulta(){
