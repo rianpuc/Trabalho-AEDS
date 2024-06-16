@@ -91,6 +91,8 @@ class Consulta{
 };
 
 std::vector<Paciente> lerPacientes(const std::string&);
+std::vector<Medico> lerMedicos(const std::string&);
+std::vector<Consulta> lerConsultas(const std::string&);
 void cadastrar_paciente(const std::string&);
 void cadastrar_medico();
 void cadastrar_consulta();
@@ -104,6 +106,8 @@ int main(void){
     std::string arqConsultas = "consultas.txt";
     int a;
     std::vector<Paciente> pacientes = lerPacientes(arqPacientes);
+    std::vector<Medico> medicos = lerMedicos(arqMedicos);
+    std::vector<Consulta> consultas = lerConsultas(arqConsultas);
     std::cout << "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n[1] - Cadastrar um paciente\n[2] - Cadastrar um medico\n[3] - Cadastrar uma consulta\n";
     std::cout << "[4] - Cancelar uma consulta\n[5] - Relatorios\n[0] - Sair\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\nSelecione uma opcao: ";
     std::cin >> a;
@@ -151,6 +155,47 @@ std::vector<Paciente> lerPacientes(const std::string& nomeArquivo){
     }
     arquivo.close();
     return pacientes;
+}
+
+std::vector<Medico> lerMedicos(const std::string& nomeArquivo){
+    std::ifstream arquivo(nomeArquivo);
+    if(!arquivo.is_open()){
+        std::ofstream arquivo(nomeArquivo);
+    }
+    std::vector<Medico> medicos;
+    std::string codigo, nome, especialidade, telefone;
+    while(std::getline(arquivo, codigo) &&
+           std::getline(arquivo, nome) &&
+           std::getline(arquivo, especialidade) &&
+           std::getline(arquivo, telefone)){
+        if(arquivo.fail()){
+            exit(EXIT_FAILURE);
+        }
+        medicos.emplace_back(codigo, nome, especialidade, telefone);
+    }
+    arquivo.close();
+    return medicos;
+}
+
+std::vector<Consulta> lerConsultas(const std::string& nomeArquivo){
+    std::ifstream arquivo(nomeArquivo);
+    if(!arquivo.is_open()){
+        std::ofstream arquivo(nomeArquivo);
+    }
+    std::vector<Consulta> consultas;
+    std::string codigo, data, hora, cod_medico, cod_paciente;
+    while(std::getline(arquivo, codigo) &&
+           std::getline(arquivo, data) &&
+           std::getline(arquivo, hora) &&
+           std::getline(arquivo, cod_medico) &&
+           std::getline(arquivo, cod_paciente)){
+        if(arquivo.fail()){
+            exit(EXIT_FAILURE);
+        }
+        consultas.emplace_back(codigo, data, hora, cod_medico, cod_paciente);
+    }
+    arquivo.close();
+    return consultas;
 }
 
 void cadastrar_paciente(const std::string& nomeArquivo){
