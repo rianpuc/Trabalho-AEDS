@@ -105,6 +105,8 @@ int converteHoraPraMinutos(const std::string&);
 int converterDataPraNumero(const std::string&);
 bool verificarMenorData(const std::string&, const std::string&);
 bool verificarHoraValida(const std::string&, const std::string&);
+bool verificarCadastroMedico(const std::string&, const std::string&);
+bool verificarCadastroPaciente(const std::string&, const std::string&);
 std::string obterDataAtual();
 std::string gerarCodigo();
 
@@ -143,6 +145,26 @@ int main(void){
             break;
     }
 }
+
+bool verificarCadastroMedico(const std::string& entrada, const std::string& nomeArquivo) {
+    std::vector<Medico> medicosCadastrados = lerMedicos(nomeArquivo);
+    for (const Medico& medico : medicosCadastrados) {
+        if (medico.getNome() == entrada || medico.getCodigo() == entrada)
+            return true;
+    }
+
+    return false;
+}; 
+
+bool verificarCadastroPaciente(const std::string& entrada, const std::string& nomeArquivo) {
+    std::vector<Paciente> pacientesCadastrados = lerPacientes(nomeArquivo);
+    for (const Paciente& paciente : pacientesCadastrados) {
+        if (paciente.getNome() == entrada || paciente.getCodigo() == entrada)
+            return true;
+    }
+
+    return false;
+}; 
 
 std::vector<Paciente> lerPacientes(const std::string& nomeArquivo){
     std::ifstream arquivo(nomeArquivo);
