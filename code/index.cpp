@@ -139,7 +139,6 @@ int main(void){
 std::vector<Paciente> lerPacientes(const std::string& nomeArquivo){
     std::ifstream arquivo(nomeArquivo);
     if(!arquivo.is_open()){
-        std::cout << "Erro ao abrir o arquivo\n";
         std::ofstream arquivo(nomeArquivo);
     }
     std::vector<Paciente> pacientes;
@@ -150,7 +149,6 @@ std::vector<Paciente> lerPacientes(const std::string& nomeArquivo){
            std::getline(arquivo, telefone) &&
            std::getline(arquivo, data_nascimento)){
         if(arquivo.fail()){
-            std::cerr << "Erro ao ler o arquivo" << std::endl;
             exit(EXIT_FAILURE);
         }
         pacientes.emplace_back(codigo, nome, endereco, telefone, data_nascimento);
