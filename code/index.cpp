@@ -1,5 +1,8 @@
 #include <iostream>
 #include <fstream>
+#include <ctime>
+#include <iomanip>
+#include <sstream>
 #include <string>
 #include <vector>
 #include <chrono>
@@ -98,6 +101,11 @@ void cadastrar_medico();
 void cadastrar_consulta();
 void cancelar_consulta();
 void relatorios();
+int converteHoraPraMinutos(const std::string&);
+int converterDataPraNumero(const std::string&);
+bool verificarMenorData(const std::string&, const std::string&);
+bool verificarHoraValida(const std::string&, const std::string&);
+std::string obterDataAtual();
 std::string gerarCodigo();
 
 int main(void){
@@ -211,7 +219,6 @@ void cadastrar_paciente(const std::string& nomeArquivo){
     std::getline(std::cin, telefone);
     std::cout << "Data de Nascimento (DD/MM/AAAA): ";
     std::getline(std::cin, data_nascimento);
-    Paciente novoPaciente(codigo, nome, endereco, telefone, data_nascimento);
     arquivo << codigo << "\n" << nome << "\n" << endereco << "\n" << telefone << "\n" << data_nascimento << "\n";
     arquivo.close();
     main();
@@ -241,6 +248,46 @@ void cancelar_consulta(){
 
 void relatorios(){
     std::cout << "\nRelatorios\n";
+}
+
+int converteHoraPraMinutos(const std::string& hora){
+    int horas, minutos;
+    char delim;
+    std::istringstream ss(hora);
+    ss >> horas >> delim >> minutos;
+    return horas * 60 + minutos;
+}
+
+int converterDataPraNumero(const std::string& data){
+    int dia, mes, ano;
+    char delim;
+    std::istringstream ss(data);
+    ss >> dia >> delim >> mes >> delim >> ano;
+    return ano * 10000 + mes * 100 + dia;
+}
+
+bool verificarMenorData(const std::string& data1, const std::string& data2){
+    int num_data1 = converterDataPraNumero(data1);
+    int num_data2 = converterDataPraNumero(data2);
+    return num_data1 < num_data2;
+}
+
+bool verificarHoraValida(const std::string& hora1, const std::string& hora2){
+    int minutos1 = converteHoraPraMinutos(hora1);
+    int minutos2 = converteHoraPraMinutos(hora2);
+    int diferenca = std::abs(minutos1 - minutos2);
+    return diferenca >= 30;
+}
+
+std::string obterDataAtual(){
+    auto agora = std::chrono::system_clock::now();
+    std::time_t tempo_atual = std::chrono::system_clock::to_time_t(agora);
+    std::tm *tm_atual = std::localtime(&tempo_atual);
+    std::ostringstream data_formatada;
+    data_formatada << std::setfill('0') << std::setw(2) << tm_atual->tm_mday << "/"
+                   << std::setfill('0') << std::setw(2) << (tm_atual->tm_mon + 1) << "/"
+                   << (tm_atual->tm_year + 1900);
+    return data_formatada.str();
 }
 
 std::string gerarCodigo(){
