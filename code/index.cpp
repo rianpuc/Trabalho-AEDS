@@ -76,7 +76,7 @@ std::vector<Paciente> lerPacientes(const std::string&);
 std::vector<Medico> lerMedicos(const std::string&);
 std::vector<Consulta> lerConsultas(const std::string&);
 void cadastrar_paciente(const std::string&);
-void cadastrar_medico();
+void cadastrar_medico(const std::string&);
 void cadastrar_consulta();
 void cancelar_consulta();
 void relatorios();
@@ -107,7 +107,7 @@ int main(void){
             cadastrar_paciente(arqPacientes);
             break;
         case 2:
-            cadastrar_medico();
+            cadastrar_medico(arqMedicos);
             break;
         case 3:
             cadastrar_consulta();
@@ -207,18 +207,20 @@ void cadastrar_paciente(const std::string& nomeArquivo){
     main();
 }
 
-void cadastrar_medico(){
+void cadastrar_medico(const std::string& nomeArquivo){
+    std::cin.ignore();
+    std::ofstream arquivo(nomeArquivo, std::ios::app);
     std::string codigo = gerarCodigo();
     std::string nome, especialidade, telefone;
-    std::cin.ignore();
     std::cout << "Nome: ";
     std::getline(std::cin, nome);
     std::cout << "Especialidade: ";
     std::getline(std::cin, especialidade);
     std::cout << "Telefone: ";
     std::getline(std::cin, telefone);
-    Medico novoMedico(codigo, nome, especialidade, telefone);
-    novoMedico.exibir();
+    arquivo << codigo << "\n" << nome << "\n" << especialidade << "\n" << telefone << "\n";
+    arquivo.close();
+    main();
 }
 
 void cadastrar_consulta(){
@@ -279,7 +281,6 @@ Paciente* buscarPaciente(const std::string& entrada, std::vector<Paciente>& dado
         if (paciente.getNome() == entrada || paciente.getCodigo() == entrada)
             return &paciente;
     }
-
     return nullptr;
 };
 
@@ -288,7 +289,6 @@ Medico* buscarMedico(const std::string& entrada, std::vector<Medico>& dados) {
         if (medico.getNome() == entrada || medico.getCodigo() == entrada)
             return &medico;
     }
-
     return nullptr;  
 };
 
