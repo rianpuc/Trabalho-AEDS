@@ -291,9 +291,8 @@ std::string obterDataAtual(){
 }
 
 std::string gerarCodigo(){
-    using namespace std::chrono;
-    auto agora = system_clock::now();
+    auto agora = std::chrono::system_clock::now();
     auto duracao = agora.time_since_epoch();
-    auto millis = duration_cast<milliseconds>(duracao).count();
+    auto millis = std::chrono::duration_cast<std::chrono::milliseconds>(duracao).count();
     return std::to_string(millis);
 }
