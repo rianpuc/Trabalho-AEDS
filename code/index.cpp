@@ -88,8 +88,8 @@ bool verificarCadastroMedico(const std::string&, const std::string&);
 bool verificarCadastroPaciente(const std::string&, const std::string&);
 std::string obterDataAtual();
 std::string gerarCodigo();
-Paciente* buscarPaciente(const std::string&, const std::vector<Paciente>&);
-Medico* buscarMedico(const std::string&, const std::vector<Medico>&);
+Paciente* buscarPaciente(const std::string&, std::vector<Paciente>&);
+Medico* buscarMedico(const std::string&, std::vector<Medico>&);
 
 int main(void){
     std::string arqPacientes = "pacientes.txt";
