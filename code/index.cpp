@@ -242,7 +242,6 @@ void cadastrar_consulta(const std::string& nomeArquivo){
     std::getline(std::cin, nome_do_paciente);
     std::vector<Paciente> pacientes = lerPacientes(arqPacientes);
     std::vector<Medico> medicos = lerMedicos(arqMedicos);
-    std::vector<Consulta> consultas = lerConsultas(arqConsultas);
     if(verificarCadastroMedico(nome_do_medico, medicos) == true){
         medico = buscarMedico(nome_do_medico, medicos);
         cod_medico = medico->getCodigo();
@@ -272,7 +271,29 @@ void cadastrar_consulta(const std::string& nomeArquivo){
 }
 
 void cancelar_consulta(){
-    std::cout << "\nCancelar consulta\n";
+    bool achou = false;
+    std::string cod_consulta;
+    std::vector<Consulta> consultas = lerConsultas(arqConsultas);
+    std::cout << "Insira o codigo da consulta: ";
+    std::cin >> cod_consulta;
+    for(auto it = consultas.begin(); it != consultas.end(); ++it) {
+        if(it->getCodigo() == cod_consulta) {
+            consultas.erase(it);
+            achou = true;
+            break;
+        }
+    }
+    if(achou){
+        std::ofstream arquivo(arqConsultas);
+        for(const auto& consulta : consultas){
+            arquivo << consulta.getCodigo() << "\n" << consulta.getData() << "\n" << consulta.getHora() << "\n" << consulta.getCodMed() << "\n" << consulta.getCodPac() << "\n";
+        }
+        std::cout << "Consulta cancelada com sucesso." << std::endl;
+        arquivo.close();
+    } else {
+        std::cout << "Consulta nao encontrada." << std::endl;
+    }
+    main();
 }
 
 void relatorios(){
