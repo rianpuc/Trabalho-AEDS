@@ -80,6 +80,9 @@ void cadastrar_medico(const std::string&);
 void cadastrar_consulta(const std::string&);
 void cancelar_consulta();
 void relatorios();
+void imprimeConsultasDia();
+void imprimeConsultasPaciente();
+void imprimeConsultasMedico();
 int converteHoraPraMinutos(const std::string&);
 int converterDataPraNumero(const std::string&);
 bool verificarMenorData(const std::string&, const std::string&);
@@ -297,7 +300,64 @@ void cancelar_consulta(){
 }
 
 void relatorios(){
-    std::cout << "\nRelatorios\n";
+    int escolha;
+    std::cout << "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n[1] - Consultas de uma data\n[2] - Consultas realizadas do paciente\n[3] - Consultas agendadas do medico\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n";
+    std::cin >> escolha;
+    switch (escolha){
+        case 1:
+            imprimeConsultasDia();
+            break;
+        case 2:
+            imprimeConsultasPaciente();
+            break;
+        case 3:
+            imprimeConsultasMedico();
+            break;
+        default:
+            relatorios();
+            break;
+    }
+}
+
+void imprimeConsultasDia(){
+    bool acheiUma = false;
+    std::string dia;
+    std::cout << "Digite o dia para ver as consultas: " << std::endl;
+    std::cin >> dia;
+    std::vector<Consulta> consultasCadastradas = lerConsultas(arqConsultas);
+    std::vector<Paciente> pacientesCadastrados = lerPacientes(arqPacientes);
+    std::vector<Medico> medicosCadastrados = lerMedicos(arqMedicos);
+    for (Consulta& consulta : consultasCadastradas)
+        if (consulta.getData() == dia){
+            std::string nomePaciente, nomeMedico;
+            for(Paciente& pacientes : pacientesCadastrados)
+                if(pacientes.getCodigo() == consulta.getCodPac())
+                    nomePaciente = pacientes.getNome();
+            for(Medico& medicos : medicosCadastrados)
+                if(medicos.getCodigo() == consulta.getCodMed())
+                    nomeMedico = medicos.getNome();
+            std::cout << "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n" << "Codigo: " << consulta.getCodigo() << "\nData: " << consulta.getData() << "\nHora: " << consulta.getHora() << "\nNome do Medico: " << nomeMedico << " | Cod: " << consulta.getCodMed() << "\nNome do Paciente: " << nomePaciente << " | Cod: " << consulta.getCodPac() << "\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" <<std::endl;
+            acheiUma = true;
+        }
+    if(acheiUma == false){
+        std::cout << "Nao ha consultas marcadas para este dia!\n";
+    }
+    main();
+}
+
+void imprimeConsultasPaciente(){
+
+
+
+
+
+}
+
+void imprimeConsultasMedico(){
+
+
+
+
 }
 
 int converteHoraPraMinutos(const std::string& hora){
