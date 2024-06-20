@@ -301,7 +301,7 @@ void cancelar_consulta(){
 
 void relatorios(){
     int escolha;
-    std::cout << "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n[1] - Consultas de uma data\n[2] - Consultas realizadas do paciente\n[3] - Consultas agendadas do medico\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n";
+    std::cout << "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n[1] - Consultas de uma data\n[2] - Consultas realizadas do paciente\n[3] - Consultas agendadas do medico\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\nEscolha: ";
     std::cin >> escolha;
     switch (escolha){
         case 1:
@@ -377,10 +377,33 @@ void imprimeConsultasPaciente(){
 }
 
 void imprimeConsultasMedico(){
-
-
-
-
+    bool acheiMedico = false, acheiConsulta = false;
+    std::string input, nomePaciente, nomeMedico, codMedico;
+    std::cout << "Digite o codigo/nome do medico para ver todas suas consultas: ";
+    std::cin >> input;
+    std::vector<Consulta> consultasCadastradas = lerConsultas(arqConsultas);
+    std::vector<Paciente> pacientesCadastrados = lerPacientes(arqPacientes);
+    std::vector<Medico> medicosCadastrados = lerMedicos(arqMedicos);
+    for(Medico& medicos : medicosCadastrados)
+        if(medicos.getCodigo() == input || medicos.getNome() == input){
+            nomeMedico = medicos.getNome();
+            codMedico = medicos.getCodigo();
+            acheiMedico = true;
+        }
+    if(acheiMedico){
+        for(Consulta& consulta : consultasCadastradas)
+                if(consulta.getCodMed() == codMedico){
+                    for(Paciente& pacientes : pacientesCadastrados)
+                        if(pacientes.getCodigo() == consulta.getCodPac()){
+                            nomePaciente = pacientes.getNome();
+                        std::cout << "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n" << "Codigo: " << consulta.getCodigo() << "\nData: " << consulta.getData() << "\nHora: " << consulta.getHora() << "\nNome do Medico: " << nomeMedico << " | Cod: " << consulta.getCodMed() << "\nNome do Paciente: " << nomePaciente << " | Cod: " << consulta.getCodPac() << "\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" <<std::endl;
+                        acheiConsulta = true;
+                        }
+                }
+    }
+    if(acheiConsulta == false && acheiMedico == true)
+        std::cout << "Esse medico nao realizou nenhuma consulta." << std::endl;
+    main();
 }
 
 int converteHoraPraMinutos(const std::string& hora){
