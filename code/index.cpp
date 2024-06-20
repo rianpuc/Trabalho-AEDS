@@ -346,11 +346,34 @@ void imprimeConsultasDia(){
 }
 
 void imprimeConsultasPaciente(){
-
-
-
-
-
+    bool acheiPaciente = false, acheiConsulta = false;
+    std::string input, nomePaciente, nomeMedico;
+    std::string data = obterDataAtual();
+    std::cout << "Digite o codigo/nome do paciente para ver as consultas realizadas ate o dia " << data << ": ";
+    std::cin >> input;
+    std::vector<Consulta> consultasCadastradas = lerConsultas(arqConsultas);
+    std::vector<Paciente> pacientesCadastrados = lerPacientes(arqPacientes);
+    std::vector<Medico> medicosCadastrados = lerMedicos(arqMedicos);
+    for(Paciente& pacientes : pacientesCadastrados)
+        if(pacientes.getCodigo() == input || pacientes.getNome() == input){
+            nomePaciente = pacientes.getNome();
+            acheiPaciente = true;
+        }
+    if(acheiPaciente){
+        for (Consulta& consulta : consultasCadastradas)
+            if(verificarMenorData(consulta.getData(), data) == true){
+                for(Medico& medicos : medicosCadastrados)
+                    if(medicos.getCodigo() == consulta.getCodMed())
+                        nomeMedico = medicos.getNome();
+                std::cout << "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n" << "Codigo: " << consulta.getCodigo() << "\nData: " << consulta.getData() << "\nHora: " << consulta.getHora() << "\nNome do Medico: " << nomeMedico << " | Cod: " << consulta.getCodMed() << "\nNome do Paciente: " << nomePaciente << " | Cod: " << consulta.getCodPac() << "\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" <<std::endl;
+                acheiConsulta = true;
+            }
+    } else {
+        std::cout << "Esse paciente nao esta cadastrado!\n";
+    }
+    if(acheiConsulta == false && acheiPaciente == true)
+        std::cout << "Nao ha consultas deste paciente ate a data corrente." << std::endl;
+    main();
 }
 
 void imprimeConsultasMedico(){
