@@ -8,9 +8,9 @@
 #include <chrono>
 #include <cstdlib>
 #ifdef _WIN32
-    #include <windows.h>
+    #include <windows.h> // Para Sleep no Windows
 #else
-    #include <unistd.h>
+    #include <unistd.h>  // Para sleep no Unix-like sistemas
 #endif
 
 class Paciente{
@@ -357,14 +357,16 @@ void imprimeConsultasDia(){
     std::vector<Medico> medicosCadastrados = lerMedicos(arqMedicos);
     for (Consulta& consulta : consultasCadastradas)
         if (consulta.getData() == dia){
-            std::string nomePaciente, nomeMedico;
+            std::string nomePaciente, nomeMedico, espMedico;
             for(Paciente& pacientes : pacientesCadastrados)
                 if(pacientes.getCodigo() == consulta.getCodPac())
                     nomePaciente = pacientes.getNome();
             for(Medico& medicos : medicosCadastrados)
-                if(medicos.getCodigo() == consulta.getCodMed())
+                if(medicos.getCodigo() == consulta.getCodMed()){
                     nomeMedico = medicos.getNome();
-            std::cout << "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n" << "Codigo: " << consulta.getCodigo() << "\nData: " << consulta.getData() << "\nHora: " << consulta.getHora() << "\nNome do Medico: " << nomeMedico << " | Cod: " << consulta.getCodMed() << "\nNome do Paciente: " << nomePaciente << " | Cod: " << consulta.getCodPac() << "\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" <<std::endl;
+                    espMedico = medicos.getEspecialidade();
+                }
+            std::cout << "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n" << "Codigo: " << consulta.getCodigo() << "\nData: " << consulta.getData() << "\nHora: " << consulta.getHora() << "\nNome do Medico: " << nomeMedico << " [" << espMedico << "] | Cod: " << consulta.getCodMed() << "\nNome do Paciente: " << nomePaciente << " | Cod: " << consulta.getCodPac() << "\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" <<std::endl;
             acheiUma = true;
         }
     if(acheiUma == false){
@@ -380,7 +382,7 @@ void imprimeConsultasDia(){
 
 void imprimeConsultasPaciente(){
     bool acheiPaciente = false, acheiConsulta = false;
-    std::string input, nomePaciente, nomeMedico;
+    std::string input, nomePaciente, nomeMedico, espMedico;
     std::string data = obterDataAtual();
     std::cout << "Digite o codigo/nome do paciente para ver as consultas realizadas ate o dia " << data << ": ";
     std::cin >> input;
@@ -396,9 +398,11 @@ void imprimeConsultasPaciente(){
         for (Consulta& consulta : consultasCadastradas)
             if(verificarMenorData(consulta.getData(), data) == true){
                 for(Medico& medicos : medicosCadastrados)
-                    if(medicos.getCodigo() == consulta.getCodMed())
+                    if(medicos.getCodigo() == consulta.getCodMed()){
                         nomeMedico = medicos.getNome();
-                std::cout << "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n" << "Codigo: " << consulta.getCodigo() << "\nData: " << consulta.getData() << "\nHora: " << consulta.getHora() << "\nNome do Medico: " << nomeMedico << " | Cod: " << consulta.getCodMed() << "\nNome do Paciente: " << nomePaciente << " | Cod: " << consulta.getCodPac() << "\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" <<std::endl;
+                        espMedico = medicos.getEspecialidade();
+                    }
+                    std::cout << "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n" << "Codigo: " << consulta.getCodigo() << "\nData: " << consulta.getData() << "\nHora: " << consulta.getHora() << "\nNome do Medico: " << nomeMedico << " [" << espMedico << "] | Cod: " << consulta.getCodMed() << "\nNome do Paciente: " << nomePaciente << " | Cod: " << consulta.getCodPac() << "\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" <<std::endl;
                 acheiConsulta = true;
             }
     } else {
@@ -416,7 +420,7 @@ void imprimeConsultasPaciente(){
 
 void imprimeConsultasMedico(){
     bool acheiMedico = false, acheiConsulta = false;
-    std::string input, nomePaciente, nomeMedico, codMedico;
+    std::string input, nomePaciente, nomeMedico, codMedico, espMedico;
     std::cout << "Digite o codigo/nome do medico para ver todas suas consultas: ";
     std::cin >> input;
     std::vector<Consulta> consultasCadastradas = lerConsultas(arqConsultas);
@@ -426,6 +430,7 @@ void imprimeConsultasMedico(){
         if(medicos.getCodigo() == input || medicos.getNome() == input){
             nomeMedico = medicos.getNome();
             codMedico = medicos.getCodigo();
+            espMedico = medicos.getEspecialidade();
             acheiMedico = true;
         }
     if(acheiMedico){
@@ -434,7 +439,7 @@ void imprimeConsultasMedico(){
                     for(Paciente& pacientes : pacientesCadastrados)
                         if(pacientes.getCodigo() == consulta.getCodPac()){
                             nomePaciente = pacientes.getNome();
-                        std::cout << "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n" << "Codigo: " << consulta.getCodigo() << "\nData: " << consulta.getData() << "\nHora: " << consulta.getHora() << "\nNome do Medico: " << nomeMedico << " | Cod: " << consulta.getCodMed() << "\nNome do Paciente: " << nomePaciente << " | Cod: " << consulta.getCodPac() << "\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" <<std::endl;
+                        std::cout << "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n" << "Codigo: " << consulta.getCodigo() << "\nData: " << consulta.getData() << "\nHora: " << consulta.getHora() << "\nNome do Medico: " << nomeMedico << " [" << espMedico << "] | Cod: " << consulta.getCodMed() << "\nNome do Paciente: " << nomePaciente << " | Cod: " << consulta.getCodPac() << "\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" <<std::endl;
                         acheiConsulta = true;
                         }
                 }
