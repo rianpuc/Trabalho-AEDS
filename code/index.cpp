@@ -329,7 +329,7 @@ void relatorios(){
     limparTerminal();
     std::cin.ignore();
     int escolha;
-    std::cout << "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n[1] - Consultas de uma data\n[2] - Consultas realizadas do paciente\n[3] - Consultas agendadas do medico\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\nEscolha: ";
+    std::cout << "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n[1] - Consultas de uma data\n[2] - Consultas realizadas do paciente\n[3] - Consultas agendadas do medico\n[0] - Retornar ao menu\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\nEscolha: ";
     std::cin >> escolha;
     switch (escolha){
         case 1:
@@ -340,6 +340,9 @@ void relatorios(){
             break;
         case 3:
             imprimeConsultasMedico();
+            break;
+        case 0:
+            main();
             break;
         default:
             relatorios();
@@ -377,7 +380,7 @@ void imprimeConsultasDia(){
     #else
         sleep(5);
     #endif
-    main();
+    relatorios();
 }
 
 void imprimeConsultasPaciente(){
@@ -415,7 +418,7 @@ void imprimeConsultasPaciente(){
     #else
         sleep(5);
     #endif
-    main();
+    relatorios();
 }
 
 void imprimeConsultasMedico(){
@@ -451,7 +454,7 @@ void imprimeConsultasMedico(){
     #else
         sleep(5);
     #endif
-    main();
+    relatorios();
 }
 
 int converteHoraPraMinutos(const std::string& hora){
