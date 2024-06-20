@@ -6,6 +6,12 @@
 #include <string>
 #include <vector>
 #include <chrono>
+#include <cstdlib>
+#ifdef _WIN32
+    #include <windows.h>
+#else
+    #include <unistd.h>
+#endif
 
 class Paciente{
     private:
@@ -72,6 +78,14 @@ class Consulta{
             std::cout << "Código: " << codigo << "\n" << "Data: " << data << "\n" << "Hora: " << hora << "\n" << "Codigo Medico: " << cod_medico << "\n" << "Codigo Paciente: " << cod_paciente << "\n"; }
 };
 
+void limparTerminal() {
+    #ifdef _WIN32
+        std::system("cls");
+    #else
+        std::system("clear");
+    #endif
+}
+
 std::vector<Paciente> lerPacientes(const std::string&);
 std::vector<Medico> lerMedicos(const std::string&);
 std::vector<Consulta> lerConsultas(const std::string&);
@@ -102,6 +116,7 @@ std::string arqMedicos = "medicos.txt";
 std::string arqConsultas = "consultas.txt";
 
 int main(void){
+    limparTerminal();
     int a;
     std::vector<Paciente> pacientes = lerPacientes(arqPacientes);
     std::vector<Medico> medicos = lerMedicos(arqMedicos);
@@ -263,6 +278,7 @@ void cadastrar_consulta(const std::string& nomeArquivo){
                 std::ofstream arquivo(nomeArquivo, std::ios::app);
                 arquivo << codigo << "\n" << data << "\n" << hora << "\n" << cod_medico << "\n" << cod_paciente << "\n";
                 arquivo.close();
+                std::cout << "Consulta marcada com sucesso!\n";
             } else {
                 std::cout << "Nao eh possivel marcar uma consulta neste horario!\n";
             }
@@ -270,6 +286,11 @@ void cadastrar_consulta(const std::string& nomeArquivo){
             std::cout << "A agenda para esse dia ja esta cheia!\n";
         }
     }
+    #ifdef _WIN32
+        Sleep(3000);
+    #else
+        sleep(3);
+    #endif
     main();
 }
 
@@ -296,10 +317,17 @@ void cancelar_consulta(){
     } else {
         std::cout << "Consulta nao encontrada." << std::endl;
     }
+    #ifdef _WIN32
+        Sleep(3000);
+    #else
+        sleep(3);
+    #endif
     main();
 }
 
 void relatorios(){
+    limparTerminal();
+    std::cin.ignore();
     int escolha;
     std::cout << "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n[1] - Consultas de uma data\n[2] - Consultas realizadas do paciente\n[3] - Consultas agendadas do medico\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\nEscolha: ";
     std::cin >> escolha;
@@ -322,7 +350,7 @@ void relatorios(){
 void imprimeConsultasDia(){
     bool acheiUma = false;
     std::string dia;
-    std::cout << "Digite o dia para ver as consultas: " << std::endl;
+    std::cout << "Digite o dia para ver as consultas: ";
     std::cin >> dia;
     std::vector<Consulta> consultasCadastradas = lerConsultas(arqConsultas);
     std::vector<Paciente> pacientesCadastrados = lerPacientes(arqPacientes);
@@ -342,6 +370,11 @@ void imprimeConsultasDia(){
     if(acheiUma == false){
         std::cout << "Nao ha consultas marcadas para este dia!\n";
     }
+    #ifdef _WIN32
+        Sleep(5000);
+    #else
+        sleep(5);
+    #endif
     main();
 }
 
@@ -373,6 +406,11 @@ void imprimeConsultasPaciente(){
     }
     if(acheiConsulta == false && acheiPaciente == true)
         std::cout << "Nao ha consultas deste paciente ate a data corrente." << std::endl;
+    #ifdef _WIN32
+        Sleep(5000);
+    #else
+        sleep(5);
+    #endif
     main();
 }
 
@@ -403,6 +441,11 @@ void imprimeConsultasMedico(){
     }
     if(acheiConsulta == false && acheiMedico == true)
         std::cout << "Esse medico nao realizou nenhuma consulta." << std::endl;
+    #ifdef _WIN32
+        Sleep(5000);
+    #else
+        sleep(5);
+    #endif
     main();
 }
 
