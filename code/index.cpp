@@ -7,8 +7,9 @@
 #include <vector>
 #include <chrono>
 #include <cstdlib>
+#include "senha.h"
 #ifdef _WIN32
-    #include <windows.h> 
+    #include <windows.h>
 #else
     #include <unistd.h>
 #endif
@@ -94,6 +95,7 @@ void cadastrar_medico(const std::string&);
 void cadastrar_consulta(const std::string&);
 void cancelar_consulta();
 void relatorios();
+void login();
 void imprimeConsultasDia();
 void imprimeConsultasPaciente();
 void imprimeConsultasMedico();
@@ -111,12 +113,30 @@ Paciente* buscarPaciente(const std::string&, std::vector<Paciente>&);
 Medico* buscarMedico(const std::string&, std::vector<Medico>&);
 std::vector<Consulta> buscarConsultasPelaData(const std::string&, const Medico&);
 
+bool logado = false;
 std::string arqPacientes = "pacientes.txt";
 std::string arqMedicos = "medicos.txt";
 std::string arqConsultas = "consultas.txt";
 
+void login(){
+    std::string a, b;
+    std::cout << "Digite o usuario: ";
+    std::cin >> a;
+    std::cout << "Digite a senha: ";
+    std::cin >> b;
+    if(!verificarLogin(a, b)){
+        limparTerminal();
+        std::cout << "Usuario e/ou Senha incorreta!\n";
+        login();
+    }
+    limparTerminal();
+    logado = true;
+}
+
 int main(void){
     limparTerminal();
+    if(logado == false)
+        login();
     int a;
     std::vector<Paciente> pacientes = lerPacientes(arqPacientes);
     std::vector<Medico> medicos = lerMedicos(arqMedicos);
