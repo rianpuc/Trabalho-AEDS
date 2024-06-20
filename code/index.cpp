@@ -231,6 +231,7 @@ void cadastrar_consulta(const std::string& nomeArquivo){
     std::cin.ignore();
     std::string codigo = gerarCodigo();
     std::string data, hora, nome_do_medico, nome_do_paciente, cod_medico, cod_paciente;
+    Medico* medico; Paciente* paciente;
     std::cout << "Data (DD/MM/YYYY): ";
     std::getline(std::cin, data);
     std::cout << "Hora (hh:mm): ";
@@ -243,23 +244,29 @@ void cadastrar_consulta(const std::string& nomeArquivo){
     std::vector<Medico> medicos = lerMedicos(arqMedicos);
     std::vector<Consulta> consultas = lerConsultas(arqConsultas);
     if(verificarCadastroMedico(nome_do_medico, medicos) == true){
-        Medico* medico = buscarMedico(nome_do_medico, medicos);
+        medico = buscarMedico(nome_do_medico, medicos);
         cod_medico = medico->getCodigo();
     } else {
         std::cout << "Esse medico nao esta cadastrado!\n";
     }
-
     if(verificarCadastroPaciente(nome_do_paciente, pacientes) == true){
-        Paciente* paciente = buscarPaciente(nome_do_paciente, pacientes);
+        paciente = buscarPaciente(nome_do_paciente, pacientes);
         cod_paciente = paciente->getCodigo();
     } else {
         std::cout << "Esse paciente nao esta cadastrado!\n";
     }
-
     if(verificarCadastroMedico(nome_do_medico, medicos) == true && verificarCadastroPaciente(nome_do_paciente, pacientes) == true){
-        std::ofstream arquivo(nomeArquivo, std::ios::app);
-        arquivo << codigo << "\n" << data << "\n" << hora << "\n" << cod_medico << "\n" << cod_paciente << "\n";
-        arquivo.close();
+        if(verificarQuantidadeConsultasMedico(data, *medico) == true){
+            if(verificarHorarioDisponivelMedico(hora, data, *medico) == true){
+                std::ofstream arquivo(nomeArquivo, std::ios::app);
+                arquivo << codigo << "\n" << data << "\n" << hora << "\n" << cod_medico << "\n" << cod_paciente << "\n";
+                arquivo.close();
+            } else {
+                std::cout << "Nao eh possivel marcar uma consulta neste horario!\n";
+            }
+        } else {
+            std::cout << "A agenda para esse dia ja esta cheia!\n";
+        }
     }
     main();
 }
@@ -313,6 +320,8 @@ bool verificarCadastroPaciente(const std::string& entrada, std::vector<Paciente>
 
 bool verificarQuantidadeConsultasMedico(const std::string& data, const Medico& medico) {
     std::vector<Consulta> consultasMedico = buscarConsultasPelaData(data, medico);
+    if(consultasMedico.empty())
+        return true;
     return consultasMedico.size() < 2;
 }
 
@@ -320,11 +329,16 @@ bool verificarHorarioDisponivelMedico(const std::string& horario, const std::str
     if (verificarQuantidadeConsultasMedico(data, medico) == false)
         return false;
     std::vector<Consulta> consultasMedico = buscarConsultasPelaData(data, medico);
-    Consulta& consulta = consultasMedico.at(0);
-    int horarioConsulta = converteHoraPraMinutos(consulta.getHora());
-    int horarioNovaConsulta = converteHoraPraMinutos(horario);
-    int intervalo = horarioConsulta - horarioNovaConsulta;
-    return intervalo >= 30 || intervalo <= -30;
+    if (!consultasMedico.empty()){
+        std::vector<Consulta> consultasMedico = buscarConsultasPelaData(data, medico);
+        Consulta& consulta = consultasMedico.at(0);
+        int horarioConsulta = converteHoraPraMinutos(consulta.getHora());
+        int horarioNovaConsulta = converteHoraPraMinutos(horario);
+        int intervalo = horarioConsulta - horarioNovaConsulta;
+        return intervalo >= 30 || intervalo <= -30;
+    } else {
+        return true;
+    }
 };
 
 Paciente* buscarPaciente(const std::string& entrada, std::vector<Paciente>& dados) {
