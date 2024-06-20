@@ -8,9 +8,9 @@
 #include <chrono>
 #include <cstdlib>
 #ifdef _WIN32
-    #include <windows.h> // Para Sleep no Windows
+    #include <windows.h> 
 #else
-    #include <unistd.h>  // Para sleep no Unix-like sistemas
+    #include <unistd.h>
 #endif
 
 class Paciente{
