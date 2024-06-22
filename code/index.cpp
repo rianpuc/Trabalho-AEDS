@@ -32,7 +32,7 @@ class Paciente{
         std::string getDataNascimento() const { 
             return data_nascimento; }
         void exibir() const {
-            std::cout << "Código: " << codigo << "\n" << "Nome: " << nome << "\n" << "Endereço: " << endereco << "\n" << "Telefone: " << telefone << "\n" << "Data de Nascimento: " << data_nascimento << "\n"; }
+            std::cout << "Código: " << codigo << "\n" << "Nome: " << nome << "\n" << "Endereco: " << endereco << "\n" << "Telefone: " << telefone << "\n" << "Data de Nascimento: " << data_nascimento << "\n"; }
 };
 
 class Medico{
@@ -238,7 +238,7 @@ void cadastrar_paciente(const std::string& nomeArquivo){
     std::string nome, endereco, telefone, data_nascimento;
     std::cout << "Nome: ";
     std::getline(std::cin, nome);
-    std::cout << "Endereço: ";
+    std::cout << "Endereco: ";
     std::getline(std::cin, endereco);
     std::cout << "Telefone: ";
     std::getline(std::cin, telefone);
